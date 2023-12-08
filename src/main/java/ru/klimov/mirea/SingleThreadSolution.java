@@ -1,9 +1,24 @@
 package ru.klimov.mirea;
 
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
-public class SingleThreadSolution extends AbstractSolution{
-    @Override
+public class SingleThreadSolution {
+    String symbols;
+    char[] chars;
+    MessageDigest md;
+
+    {
+        symbols = "abcdefghijklmnopqrstuvwxyz";
+        chars = symbols.toCharArray();
+        try {
+            md = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public String getPasswordFromHash(String hashPassword) {
         for (int i = 0; i < chars.length; i++) {
             for (int j = 0; j < chars.length; j++) {
@@ -36,51 +51,4 @@ public class SingleThreadSolution extends AbstractSolution{
             return false;
         }
     }
-
-
-
-    /*public String getPasswordFromHash(String hashPassword) throws NoSuchAlgorithmException {
-        String result = null;
-        List<String> stringCombinations = getStringCombination();
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
-
-        for (String line : stringCombinations) {
-            StringBuilder sb = new StringBuilder();
-            byte[]hashInBytes = md.digest(line.getBytes(StandardCharsets.US_ASCII));
-            for (byte b : hashInBytes) {
-                sb.append(String.format("%02x", b));
-            }
-            result = sb.toString();
-            if (result.equals(hashPassword)) return result;
-        }
-
-        return result;
-    }*/
-
-    /*private List<String> getStringCombination() {
-        List<String> result = new ArrayList<String>();
-        char[] chars = symbols.toCharArray();
-        StringBuilder sb;
-
-        for (int i = 0; i < chars.length; i++) {
-            for (int j = 0; j < chars.length; j++) {
-                for (int k = 0; k < chars.length; k++) {
-                    for (int l = 0; l < chars.length; l++) {
-                        for (int m = 0; m < chars.length; m++) {
-                            sb = new StringBuilder();
-                            sb.append(chars[i]);
-                            sb.append(chars[j]);
-                            sb.append(chars[k]);
-                            sb.append(chars[l]);
-                            sb.append(chars[m]);
-                            result.add(sb.toString());
-                        }
-                    }
-                }
-            }
-        }
-        return result;
-    }*/
-
-
 }
