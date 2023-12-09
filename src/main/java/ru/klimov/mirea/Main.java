@@ -24,17 +24,21 @@ public class Main {
     }
 
     private static void consoleLoop(){
-        System.out.println("Введите количество потоков: ");
-        Scanner scanner = new Scanner(System.in);
-        String hashPassword = readFromFile();
-        int threadCount = scanner.nextInt();
-        System.out.println("Хэш-значение: " + hashPassword);
-        long before = System.currentTimeMillis();
-        MultiThreadBruteForce multiThreadSolution = new MultiThreadBruteForce(hashPassword, threadCount);
-        System.out.println("Пароль: " + multiThreadSolution.getPasswordFromHash());
-        long after = System.currentTimeMillis();
-
-        System.out.println("Время выполнения программы: " + (after - before) / 1000 + " с");
+        while (true) {
+            System.out.print("Введите количество потоков: ");
+            Scanner scanner = new Scanner(System.in);
+            String hashPassword = readFromFile();
+            int threadCount = scanner.nextInt();
+            if (threadCount <= 0){
+                break;
+            }
+            System.out.println("Хэш-значение: " + hashPassword);
+            long before = System.currentTimeMillis();
+            MultiThreadBruteForce multiThreadSolution = new MultiThreadBruteForce(hashPassword, threadCount);
+            System.out.println("Пароль: " + multiThreadSolution.getPasswordFromHash());
+            long after = System.currentTimeMillis();
+            System.out.println("Время выполнения программы: " + (after - before) / 1000 + " с\n");
+        }
     }
 
     private static String readFromFile() {
