@@ -1,21 +1,54 @@
 package ru.klimov.mirea;
 
 
-import java.security.NoSuchAlgorithmException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args){
-        SingleThreadSolution singleThreadSolution = new SingleThreadSolution();
-        long before = System.currentTimeMillis();
-
-        System.out.println(
-                singleThreadSolution.getPasswordFromHash("1115dd800feaacefdf481f1f9070374a2a81e27880f187396db67958b207cbad")
-        );
-
-
-        long after = System.currentTimeMillis();
-        System.out.println("Program took " + (after - before) + "ms to run");
+        consoleLoop();
     }
+
+    protected void read(Path path) {
+        try {
+            byte[] bytes = Files.readAllBytes(path);
+            System.out.println("Содержимое файла " + path.getFileName() + ":");
+            System.out.println(new String(bytes, StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            System.out.println("Ошибка чтения файла");
+        }
+    }
+
+    private static void consoleLoop(){
+        System.out.println("Введите количество потоков: ");
+        Scanner scanner = new Scanner(System.in);
+        String hashPassword = readFromFile();
+        int threadCount = scanner.nextInt();
+        System.out.println("Хэш-значение: " + hashPassword);
+        long before = System.currentTimeMillis();
+        MultiThreadBruteForce multiThreadSolution = new MultiThreadBruteForce(hashPassword, threadCount);
+        System.out.println("Пароль: " + multiThreadSolution.getPasswordFromHash());
+        long after = System.currentTimeMillis();
+
+        System.out.println("Время выполнения программы: " + (after - before) / 1000 + " с");
+    }
+
+    private static String readFromFile() {
+        String result = null;
+        try {
+            byte[] bytes = Files.readAllBytes(Paths.get("src/main/resources/hash.txt"));
+            result = new String(bytes, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            System.out.println("Ошибка чтения файла");
+        }
+        return result;
+    }
+
+
 }
 
 
